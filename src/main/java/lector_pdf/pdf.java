@@ -1,7 +1,6 @@
 package lector_pdf;
 
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,6 +38,7 @@ public class pdf extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
+
     }
     String ruta_1 = "";
     String ruta_2 = "";
@@ -64,7 +64,7 @@ public class pdf extends javax.swing.JFrame {
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 220, -1, -1));
 
         BT_doc1.setIcon(new javax.swing.ImageIcon("C:\\Users\\inaki\\OneDrive\\Documentos\\NetBeansProjects\\L_PDF\\src\\Imagenes\\Doc_n.png")); // NOI18N
-        BT_doc1.setBorder(null);
+        BT_doc1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         BT_doc1.setContentAreaFilled(false);
         BT_doc1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BT_doc1.setRolloverIcon(new javax.swing.ImageIcon("C:\\Users\\inaki\\OneDrive\\Documentos\\NetBeansProjects\\L_PDF\\src\\Imagenes\\Doc_s.png")); // NOI18N
@@ -90,6 +90,7 @@ public class pdf extends javax.swing.JFrame {
         BT_crear.setIcon(new javax.swing.ImageIcon("C:\\Users\\inaki\\OneDrive\\Documentos\\NetBeansProjects\\L_PDF\\src\\Imagenes\\Crear_n.png")); // NOI18N
         BT_crear.setBorder(null);
         BT_crear.setContentAreaFilled(false);
+        BT_crear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BT_crear.setRolloverIcon(new javax.swing.ImageIcon("C:\\Users\\inaki\\OneDrive\\Documentos\\NetBeansProjects\\L_PDF\\src\\Imagenes\\Crear_h.png")); // NOI18N
         BT_crear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,6 +102,7 @@ public class pdf extends javax.swing.JFrame {
         BT_borrar.setIcon(new javax.swing.ImageIcon("C:\\Users\\inaki\\OneDrive\\Documentos\\NetBeansProjects\\L_PDF\\src\\Imagenes\\B_c.png")); // NOI18N
         BT_borrar.setBorder(null);
         BT_borrar.setContentAreaFilled(false);
+        BT_borrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BT_borrar.setRolloverIcon(new javax.swing.ImageIcon("C:\\Users\\inaki\\OneDrive\\Documentos\\NetBeansProjects\\L_PDF\\src\\Imagenes\\B_a.png")); // NOI18N
         BT_borrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,9 +118,9 @@ public class pdf extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BT_doc1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BT_doc1ActionPerformed
-        
+
         bandera_1 = 0;
-        
+
         JFileChooser buscador = new JFileChooser();
         FileNameExtensionFilter filtrado = new FileNameExtensionFilter("PDF", "pdf");
         buscador.setFileFilter(filtrado);
@@ -131,27 +133,27 @@ public class pdf extends javax.swing.JFrame {
             ImageIcon paloma = new ImageIcon("C:/Users/inaki/OneDrive/Documentos/NetBeansProjects/L_PDF/src/Imagenes/Doc_c");
             BT_doc1.setIcon(paloma);
 
-            
             JOptionPane.showMessageDialog(null, ruta_1);
             System.out.println(ruta_1);
         }
         try {
-                    PDDocument documento = PDDocument.load(new File(ruta_1)); // ruta_1 es la ruta del primer documento PDF
-                    PDFTextStripper stripper = new PDFTextStripper();
-                    String contenido = stripper.getText(documento);
+            PDDocument documento = PDDocument.load(new File(ruta_1)); // ruta_1 es la ruta del primer documento PDF
+            PDFTextStripper stripper = new PDFTextStripper();
+            String contenido = stripper.getText(documento);
 
-                    palabras = contenido.split("\\s+"); // Esto separa por espacios en blanco, incluyendo espacios, tabulaciones, etc.
+            palabras = contenido.split("\\s+|(?<=,)|(?=,)|\\?"); // Divide por espacios, comas y signos de interrogación
 
-                    for (String palabra : palabras) {
-                        System.out.println(palabra);
-                    }
+            for (int i = 0; i < palabras.length; i++) {
+                palabras[i] = palabras[i].toLowerCase(); // Convertir cada palabra a minúsculas
+                System.out.println(palabras[i]);
+            }
 
-                    documento.close();
-                } catch (IOException ex) {
+            documento.close();
+        } catch (IOException ex) {
 
-                    JOptionPane.showMessageDialog(this, "Debes seleccionar un documento", "Error en el documento 1", 3);
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un documento", "Error en el documento 1", 3);
 
-                }
+        }
         System.out.println(palabras);
     }//GEN-LAST:event_BT_doc1ActionPerformed
 
@@ -161,7 +163,7 @@ public class pdf extends javax.swing.JFrame {
         if (bandera_1 == 1) {
 
             JOptionPane.showMessageDialog(this, "Estos Dos Dopumentos ya fueron relacionados", "Relacion", 1);
-            
+
         } else {
 
             if (ruta_1.equals("") || ruta_2.equals("")) {
@@ -170,12 +172,11 @@ public class pdf extends javax.swing.JFrame {
 
             } else {
 
-
                 if (palabras != null && palabras2 != null) {
-                    
+
                     Set<String> setPalabras = new HashSet<>(Arrays.asList(palabras));
                     String[] palabras_c = null;
-                    
+
                     System.out.println("Palabras comunes:");
                     for (String palabras : palabras2) {
                         if (setPalabras.contains(palabras)) {
@@ -206,7 +207,7 @@ public class pdf extends javax.swing.JFrame {
                         doc.close();
 
                         JOptionPane.showMessageDialog(this, "El documento fue creado con exito en la ruta: " + rutaEscritorio + " con el nombre de Coinsidencias.pdf", "Informacion", 1);
-                        
+
                     } catch (DocumentException ex) {
 
                         JOptionPane.showMessageDialog(this, "Error en la creacion del documento de coinsidencias", "Error en el documento 2", 0);
@@ -227,20 +228,20 @@ public class pdf extends javax.swing.JFrame {
     }//GEN-LAST:event_BT_crearActionPerformed
 
     private void BT_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BT_borrarActionPerformed
-        
+
         bandera_1 = 0;
         ruta_1 = "";
         ruta_2 = "";
-        JOptionPane.showMessageDialog(this, "Las rutas se han vaciado", "Estado", 3);
+        JOptionPane.showMessageDialog(this, "Las rutas se han vaciado", "Estado", 1);
         ImageIcon normal = new ImageIcon("C:/Imagenes/Doc_n");
         BT_doc1.setIcon(normal);
         BT_doc1.setIcon(normal);
-        
+
     }//GEN-LAST:event_BT_borrarActionPerformed
 
     private void BT_doc2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BT_doc2ActionPerformed
         bandera_1 = 0;
-        
+
         JFileChooser buscador = new JFileChooser();
         FileNameExtensionFilter filtrado = new FileNameExtensionFilter("PDF", "pdf");
         buscador.setFileFilter(filtrado);
@@ -250,30 +251,29 @@ public class pdf extends javax.swing.JFrame {
         if (respuesta == JFileChooser.APPROVE_OPTION) {
 
             ruta_2 = buscador.getSelectedFile().getPath();
-            ImageIcon paloma = new ImageIcon("C:/Users/inaki/OneDrive/Documentos/NetBeansProjects/L_PDF/src/Imagenes/Doc_c");
-            BT_doc2.setIcon(paloma);
+
             JOptionPane.showMessageDialog(null, ruta_2);
-            System.out.println(ruta_2);
-            
+            System.out.println(ruta_1);
         }
         try {
-                    PDDocument documento = PDDocument.load(new File(ruta_2)); // ruta_1 es la ruta del primer documento PDF
-                    PDFTextStripper stripper = new PDFTextStripper();
-                    String contenido = stripper.getText(documento);
+            PDDocument documento = PDDocument.load(new File(ruta_2)); // ruta_1 es la ruta del primer documento PDF
+            PDFTextStripper stripper = new PDFTextStripper();
+            String contenido = stripper.getText(documento);
 
-                    palabras2 = contenido.split("\\s+"); // Esto separa por espacios en blanco, incluyendo espacios, tabulaciones, etc.
+            palabras2 = contenido.split("\\s+|(?<=,)|(?=,)|\\?"); // Divide por espacios, comas y signos de interrogación
 
-                    for (String palabra : palabras2) {
-                        System.out.println(palabra);
-                    }
+            for (int i = 0; i < palabras2.length; i++) {
+                palabras2[i] = palabras2[i].toLowerCase();
+                System.out.println(palabras2[i]);
+            }
 
-                    documento.close();
-                } catch (IOException ex) {
+            documento.close();
+        } catch (IOException ex) {
 
-                    JOptionPane.showMessageDialog(this, "Deves seleccionar un documento", "Error en el documento 2", 3);
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un documento", "Error en el documento 1", 3);
 
-                }
-        System.out.println(palabras2);
+        }
+        System.out.println(palabras);
     }//GEN-LAST:event_BT_doc2ActionPerformed
 
     public static void main(String args[]) {
